@@ -1,3 +1,4 @@
+import time
 
 class Point:
     def __init__(self, x, y):
@@ -16,7 +17,7 @@ class Line:
         fill=fill_color, width=2)
 
 class Cell:
-    def __init__(self, x1, x2, y1, y2, win):
+    def __init__(self, x1, x2, y1, y2, win=None):
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
@@ -51,7 +52,7 @@ class Cell:
             self._win.draw_line(line, "gray")
 
 class Maze:
-    def __init__(self, x1, y1, num_rows, num_cols, cell_size_x, cell_size_y, win):
+    def __init__(self, x1, y1, num_rows, num_cols, cell_size_x, cell_size_y, win=None):
         self._x1 = x1
         self._y1 = y1
         self._num_rows = num_rows 
@@ -59,8 +60,30 @@ class Maze:
         self._cell_size_x = cell_size_x
         self._cell_size_y = cell_size_y
         self._win = win
+        self._create_cells()
     
     def _create_cells(self):
-        for rows in self._num_rows:
-            for cell in self._num_cols:
-                cell = Cell()
+        self._cells = []
+        for i in range(self._num_rows):
+            row_cells = []
+            for j in range(self._num_cols):
+                x1 = self._x1 + (j * self._cell_size_x)  # j affects x (columns)
+                y1 = self._y1 + (i * self._cell_size_y)  # i affects y (rows)
+                x2 = x1 + self._cell_size_x
+                y2 = y1 + self._cell_size_y
+                
+                cell = Cell(x1, x2, y1, y2, self._win)
+                row_cells.append(cell)
+                
+                cell.draw()
+                self._animate()
+                
+            self._cells.append(row_cells)
+        
+    def _draw_cell(self, i , j):
+        self._cells[i][j].draw()
+        self._animate()
+
+    def _animate(self):
+        self._win.redraw()
+        time.sleep(0.05)
