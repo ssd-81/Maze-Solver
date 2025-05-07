@@ -21,6 +21,7 @@ class Line:
 
 class Cell:
     def __init__(self, x1, x2, y1, y2, win=None):
+        self.visited = False
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
@@ -65,7 +66,7 @@ class Cell:
 
 
 class Maze:
-    def __init__(self, x1, y1, num_rows, num_cols, cell_size_x, cell_size_y, win=None):
+    def __init__(self, x1, y1, num_rows, num_cols, cell_size_x, cell_size_y, win=None, seed=None):
         self._x1 = x1
         self._y1 = y1
         self._num_rows = num_rows
@@ -74,6 +75,10 @@ class Maze:
         self._cell_size_y = cell_size_y
         self._win = win
         self._create_cells()
+        
+        # do check this thoroughly 
+        if seed is not None:
+            random.seed(seed)
 
     def _create_cells(self):
         self._cells = []
@@ -101,6 +106,11 @@ class Maze:
         self._cells[self._num_rows - 1][self._num_cols - 1].has_bottom_wall = False
         if self._win is not None:
             self._draw_cell(self._num_rows - 1, self._num_cols - 1)
+
+    def _break_walls_r(self, i, j):
+        self._cells[i][j].visited = True
+        while True:
+            to_visit = []
 
     def _draw_cell(self, i, j):
         if self._win is not None:
