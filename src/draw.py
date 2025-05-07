@@ -29,6 +29,8 @@ class Cell:
         self._win = win
 
     def draw(self):
+        if self._win is None:
+            return 
         if self.has_left_wall:
             left_wall = Line(Point(self._x1, self._y1), Point(self._x1, self._y2))
             self._win.draw_line(left_wall, "black")
@@ -75,15 +77,18 @@ class Maze:
                 cell = Cell(x1, x2, y1, y2, self._win)
                 row_cells.append(cell)
                 
-                cell.draw()
-                self._animate()
+                if self._win is not None:
+                    cell.draw()
+                    self._animate()
                 
             self._cells.append(row_cells)
         
     def _draw_cell(self, i , j):
-        self._cells[i][j].draw()
-        self._animate()
+        if self._win is not None:
+            self._cells[i][j].draw()
+            self._animate()
 
     def _animate(self):
-        self._win.redraw()
-        time.sleep(0.05)
+        if self._win is not None:
+            self._win.redraw()
+            time.sleep(0.05)
