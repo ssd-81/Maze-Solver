@@ -1,4 +1,4 @@
-import time
+import time, random
 
 
 class Point:
@@ -110,7 +110,41 @@ class Maze:
     def _break_walls_r(self, i, j):
         self._cells[i][j].visited = True
         while True:
+            adjacent_positions = [
+                (i-1, j),  # North (up)
+                (i, j+1),  # East (right)
+                (i+1, j),  # South (down)
+                (i, j-1)   # West (left)
+            ]
             to_visit = []
+            for ni, nj in adjacent_positions:
+                if  0 <= ni < self._num_rows and 0 <= nj <self._num_cols and not self._cells[ni][nj].visited:
+                    to_visit.append((ni, nj))
+            if len(to_visit) == 0:
+                self._cells[i][j].draw()
+                return
+            else:
+                break_wall = random.choice(to_visit)
+                ni, nj = break_wall
+                # North
+                if ni == i-1 and nj == j:
+                    self._cells[i][j].has_top_wall = False
+                    self._cells[ni][nj].has_bottom_wall = False
+                # East
+                elif ni == i and nj == j+1:
+                    self._cells[i][j].has_right_wall = False
+                    self._cells[ni][nj].has_left_wall = False
+                # South
+                elif ni == i+1 and nj == j:
+                    self._cells[i][j].has_bottom_wall = False
+                    self._cells[ni][nj].has_top_wall = False
+                # West
+                elif ni == i and nj == j-1:
+                    self._cells[i][j].has_left_wall = False
+                    self._cells[ni][nj].has_right_wall = False
+                self._break_walls_r(break_wall[0], break_wall[1])
+                
+            
 
     def _draw_cell(self, i, j):
         if self._win is not None:
