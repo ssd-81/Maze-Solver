@@ -63,7 +63,18 @@ class Tests(unittest.TestCase):
         self.assertEqual(m1._cells[0][0].has_top_wall, False)
         self.assertEqual(m1._cells[num_rows-1][num_cols-1].has_bottom_wall, False)
 
+    
+    def test_visited_state_after_maze_is_constructed(self):
+        num_rows = 10
+        num_cols = 10
+        m1 = Maze(0, 0, num_rows, num_cols, 10, 10)
+        self.assertEqual(m1._cells[0][1].visited, False)
+        m1._break_walls_r(0,1)
+        self.assertEqual(m1._cells[0][1].visited, True)
+        m1._reset_cells_visited()
+        self.assertEqual(m1._cells[0][1].visited, False)
         
+
 
 if __name__ == "__main__":
     unittest.main()

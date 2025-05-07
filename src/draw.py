@@ -144,6 +144,11 @@ class Maze:
                     self._cells[ni][nj].has_right_wall = False
                 self._break_walls_r(break_wall[0], break_wall[1])
                 
+                
+    def _reset_cells_visited(self):
+        for i in range(self._num_rows):
+            for j in range(self._num_cols):
+                self._cells[i][j].visited = False
             
 
     def _draw_cell(self, i, j):

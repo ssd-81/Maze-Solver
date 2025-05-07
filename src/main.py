@@ -8,6 +8,8 @@ def main():
     maze = Maze(50, 50, 10, 10, 20, 20, win)
     maze._break_entrance_and_exit()
     maze._break_walls_r(5, 7)
+    # resets the state of the cells to unvisited once the maze has been generated 
+    maze._reset_cells_visited(5,7)
     win.wait_for_close()
 
 

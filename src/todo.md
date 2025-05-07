@@ -1,2 +1,2 @@
-1 . get adjacent cells to a particular cells
-    check if any of them is unvisited, if yes, then add them to the temp list. 
+write tests for testing whether the states of all the cells is set back to False one
+the recursive function has been defined. 
