@@ -52,6 +52,17 @@ class Tests(unittest.TestCase):
         m1 = Maze(0, 0, 20, 20, x_size, y_size)
         self.assertEqual(m1._cells[0][0]._x2 - m1._cells[0][0]._x1, x_size)
         self.assertEqual(m1._cells[1][1]._y2 - m1._cells[1][1]._y1, y_size)
+    
+    def test_entry_exit_removal(self):
+        num_rows = 10
+        num_cols = 10
+        m1 = Maze(0, 0, num_rows, num_cols, 10, 10)
+        self.assertEqual(m1._cells[0][0].has_top_wall, True)
+        self.assertEqual(m1._cells[num_rows-1][num_cols-1].has_bottom_wall, True)
+        m1._break_entrance_and_exit()
+        self.assertEqual(m1._cells[0][0].has_top_wall, False)
+        self.assertEqual(m1._cells[num_rows-1][num_cols-1].has_bottom_wall, False)
+
         
 
     
