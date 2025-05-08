@@ -35,7 +35,6 @@ class Cell:
     def draw(self):
         if self._win is None:
             return
-        # walls = [self.has_top_wall , self.has_right_wall, self.has_bottom_wall, self.has_left_wall]
 
         left_wall = Line(Point(self._x1, self._y1), Point(self._x1, self._y2))
         color = "black" if self.has_left_wall else "#d9d9d9"
@@ -111,11 +110,11 @@ class Maze:
         self._cells[i][j].visited = True
         while True:
             adjacent_positions = [
-                (i-1, j),  # North (up)
-                (i, j+1),  # East (right)
-                (i+1, j),  # South (down)
-                (i, j-1)   # West (left)
-            ]
+                (i-1, j),
+                (i, j+1),
+                (i+1, j),
+                (i, j-1)
+            ]   
             to_visit = []
             for ni, nj in adjacent_positions:
                 if  0 <= ni < self._num_rows and 0 <= nj <self._num_cols and not self._cells[ni][nj].visited:
@@ -126,20 +125,20 @@ class Maze:
             else:
                 break_wall = random.choice(to_visit)
                 ni, nj = break_wall
-                # North
-                if ni == i-1 and nj == j:
+
+                if (ni, nj) == (i-1, j):
                     self._cells[i][j].has_top_wall = False
                     self._cells[ni][nj].has_bottom_wall = False
-                # East
-                elif ni == i and nj == j+1:
+                
+                elif (ni, nj) == (i, j+1):
                     self._cells[i][j].has_right_wall = False
                     self._cells[ni][nj].has_left_wall = False
-                # South
-                elif ni == i+1 and nj == j:
+                
+                elif (ni, nj) == (i+1, j):
                     self._cells[i][j].has_bottom_wall = False
                     self._cells[ni][nj].has_top_wall = False
-                # West
-                elif ni == i and nj == j-1:
+                
+                elif (ni, nj) == (i, j-1):
                     self._cells[i][j].has_left_wall = False
                     self._cells[ni][nj].has_right_wall = False
                 self._break_walls_r(break_wall[0], break_wall[1])
@@ -151,11 +150,12 @@ class Maze:
                 self._cells[i][j].visited = False
 
     def solve(self):
-        return self._solve_r(i=0, j=0)
+        return self._solve_r(0, 0)
     
-    def _solve_r(i, j):
+    def _solve_r(self, i, j):
         '''depth first solution; other algorithms can be applied as well'''
         self._animate()
+        # self._draw_cell(i, j)
         self._cells[i][j].visited = True
         if self._cells[i][j] == self._cells[self._num_rows-1][self._num_cols-1]:
             return True
@@ -163,24 +163,49 @@ class Maze:
         for ni, nj in directions:
             if 0 <=ni<self._num_rows and 0<=nj<self._num_cols and not self._cells[ni][nj].visited:
                 if ni == i-1 and nj == j:
-                    if not self._cells[ni][nj].has_left_wall:
+                    if not self._cells[i][j].has_top_wall:
                         self._draw_cell(ni, nj)
-                        self._solve_r(ni, nj)
+                        self._cells[i][j].draw_move(self._cells[ni][nj]) # understand why it is here
+                        solved = self._solve_r(ni, nj)
+                        if solved:
+                            return True
+                        else:
+                            self._cells[i][j].draw_move(self._cells[ni][nj], True)
+
                 
                 elif ni == i and nj == j+1:
-                    if not self._cells[ni][nj].has_top_wall:
+                    if not self._cells[i][j].has_right_wall:
                         self._draw_cell(ni, nj)
-                        self._solve_r(ni, nj)
+                        self._cells[i][j].draw_move(self._cells[ni][nj])
+                        solved = self._solve_r(ni, nj)
+                        if solved:
+                            return True
+                        else:
+                            self._cells[i][j].draw_move(self._cells[ni][nj], True)
+
                 
                 elif ni == i+1 and nj == j:
-                    if not self._cells[ni][nj].has_right_wall:
+                    if not self._cells[i][j].has_bottom_wall:
                         self._draw_cell(ni, nj)
-                        self._solve_r(ni, nj)
+                        self._cells[i][j].draw_move(self._cells[ni][nj])
+                        solved = self._solve_r(ni, nj)
+                        if solved:
+                            return True
+                        else:
+                            self._cells[i][j].draw_move(self._cells[ni][nj], True)
                 
                 elif ni == i and nj == j-1:
-                    if not self._cells[ni][nj].has_bottom_wall:
+                    if not self._cells[i][j].has_left_wall:
                         self._draw_cell(ni, nj)
-                        self._solve_r(ni, nj)
+                        self._cells[i][j].draw_move(self._cells[ni][nj])
+                        solved = self._solve_r(ni, nj)
+                        if solved:
+                            return True
+                        else:
+                            self._cells[i][j].draw_move(self._cells[ni][nj], True)
+            
+        return False
+
 
     def _draw_cell(self, i, j):
         if self._win is not None:

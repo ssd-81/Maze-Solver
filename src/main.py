@@ -9,7 +9,8 @@ def main():
     maze._break_entrance_and_exit()
     maze._break_walls_r(5, 7)
     # resets the state of the cells to unvisited once the maze has been generated 
-    maze._reset_cells_visited(5,7)
+    maze._reset_cells_visited()
+    maze.solve()
     win.wait_for_close()
 
 
